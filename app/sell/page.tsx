@@ -46,7 +46,7 @@ export default function SellPage() {
   if (done) {
     return (
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight text-slate-900">
           Thanks for submitting your car!
         </h1>
         <p className="mt-3 text-slate-600">
@@ -67,7 +67,7 @@ export default function SellPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-slate-900">Sell your car</h1>
+      <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight text-slate-900">Sell your car</h1>
       <p className="mt-2 text-sm text-slate-500">
         Tell us about your car and get an instant estimated price. A team
         member will schedule a free inspection.

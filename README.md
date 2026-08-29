@@ -1,4 +1,4 @@
-# First Choice Motors
+# First-Choice Automotive
 
 A demo used-car marketplace inspired by Cars24 and Spinny, built with
 Next.js (App Router), TypeScript, and Tailwind CSS.
@@ -12,6 +12,7 @@ Next.js (App Router), TypeScript, and Tailwind CSS.
   (`app/sell`)
 - A demo admin panel to add/edit/delete listings (`app/admin`) — password
   gated for demo purposes only, **not real authentication**
+- A locations page listing branch hubs with maps (`app/locations`)
 
 Listings are seeded in [`lib/data.ts`](lib/data.ts). Anything added via the
 Sell form or Admin panel is persisted to the browser's `localStorage`

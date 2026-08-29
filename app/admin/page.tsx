@@ -123,7 +123,7 @@ export default function AdminPage() {
   if (!authed) {
     return (
       <div className="mx-auto max-w-sm px-4 py-20">
-        <h1 className="text-xl font-bold text-slate-900">Admin login</h1>
+        <h1 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-tight text-slate-900">Admin login</h1>
         <p className="mt-1 text-sm text-slate-500">
           Demo password: <code className="rounded bg-slate-100 px-1">admin123</code>
         </p>
@@ -149,7 +149,7 @@ export default function AdminPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-slate-900">Admin panel</h1>
+      <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight text-slate-900">Admin panel</h1>
       <p className="mt-1 text-sm text-slate-500">
         Add, edit, or remove listings. Changes are saved to this browser only
         (see the deployment guide to connect a real database).
