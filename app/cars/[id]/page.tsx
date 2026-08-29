@@ -75,7 +75,7 @@ export default function CarDetailPage() {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
         <div className="lg:col-span-3">
-          <CarGallery color={car.color} />
+          <CarGallery color={car.color} images={car.images} />
         </div>
 
         <div className="lg:col-span-2">

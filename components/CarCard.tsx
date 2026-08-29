@@ -10,10 +10,19 @@ export default function CarCard({ car }: { car: Car }) {
       className="group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/10"
     >
       <div className="relative overflow-hidden">
-        <CarImage
-          color={car.color}
-          className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+        {car.images && car.images.length > 0 ? (
+          // eslint-disable-next-line @next/next/no-img-element -- data URLs from localStorage
+          <img
+            src={car.images[0]}
+            alt={`${car.year} ${car.brand} ${car.model}`}
+            className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <CarImage
+            color={car.color}
+            className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        )}
         {car.featured && (
           <span className="absolute left-3 top-3 rounded-full bg-amber-500 px-2.5 py-1 text-xs font-semibold text-white shadow">
             Featured

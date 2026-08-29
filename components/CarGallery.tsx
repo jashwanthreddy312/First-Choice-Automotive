@@ -9,9 +9,20 @@ const ANGLES: { key: CarAngle; label: string }[] = [
   { key: "rear", label: "Rear" },
 ];
 
-export default function CarGallery({ color }: { color: string }) {
-  const [active, setActive] = useState<CarAngle>("front");
+export default function CarGallery({
+  color,
+  images,
+}: {
+  color: string;
+  images?: string[];
+}) {
+  const hasPhotos = !!images && images.length > 0;
+
+  const [angle, setAngle] = useState<CarAngle>("front");
+  const [photoIndex, setPhotoIndex] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+
+  const mainPhoto = hasPhotos ? images![photoIndex] : null;
 
   return (
     <div>
@@ -21,34 +32,59 @@ export default function CarGallery({ color }: { color: string }) {
         className="group relative block w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
         aria-label="Open full-size image"
       >
-        <CarImage
-          color={color}
-          angle={active}
-          className="w-full transition-transform duration-500 group-hover:scale-[1.03]"
-        />
+        {mainPhoto ? (
+          // eslint-disable-next-line @next/next/no-img-element -- data URLs from localStorage, not a servable asset
+          <img
+            src={mainPhoto}
+            alt="Car photo"
+            className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <CarImage
+            color={color}
+            angle={angle}
+            className="w-full transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        )}
         <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
           Click to zoom
         </span>
       </button>
 
       <div className="mt-3 flex gap-3">
-        {ANGLES.map((a) => (
-          <button
-            key={a.key}
-            type="button"
-            onClick={() => setActive(a.key)}
-            className={`flex-1 overflow-hidden rounded-lg border-2 transition ${
-              active === a.key
-                ? "border-blue-600"
-                : "border-transparent opacity-70 hover:opacity-100"
-            }`}
-          >
-            <CarImage color={color} angle={a.key} className="w-full" />
-            <span className="block bg-slate-50 py-1 text-center text-xs font-medium text-slate-500">
-              {a.label}
-            </span>
-          </button>
-        ))}
+        {hasPhotos
+          ? images!.map((src, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setPhotoIndex(i)}
+                className={`flex-1 overflow-hidden rounded-lg border-2 transition ${
+                  photoIndex === i
+                    ? "border-blue-600"
+                    : "border-transparent opacity-70 hover:opacity-100"
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- data URLs from localStorage */}
+                <img src={src} alt={`Thumbnail ${i + 1}`} className="aspect-[4/3] w-full object-cover" />
+              </button>
+            ))
+          : ANGLES.map((a) => (
+              <button
+                key={a.key}
+                type="button"
+                onClick={() => setAngle(a.key)}
+                className={`flex-1 overflow-hidden rounded-lg border-2 transition ${
+                  angle === a.key
+                    ? "border-blue-600"
+                    : "border-transparent opacity-70 hover:opacity-100"
+                }`}
+              >
+                <CarImage color={color} angle={a.key} className="w-full" />
+                <span className="block bg-slate-50 py-1 text-center text-xs font-medium text-slate-500">
+                  {a.label}
+                </span>
+              </button>
+            ))}
       </div>
 
       {lightbox && (
@@ -57,7 +93,12 @@ export default function CarGallery({ color }: { color: string }) {
           onClick={() => setLightbox(false)}
         >
           <div className="w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
-            <CarImage color={color} angle={active} className="w-full rounded-xl" />
+            {mainPhoto ? (
+              // eslint-disable-next-line @next/next/no-img-element -- data URLs from localStorage
+              <img src={mainPhoto} alt="Car photo, full size" className="w-full rounded-xl" />
+            ) : (
+              <CarImage color={color} angle={angle} className="w-full rounded-xl" />
+            )}
             <button
               type="button"
               onClick={() => setLightbox(false)}

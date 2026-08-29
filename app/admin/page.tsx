@@ -10,6 +10,7 @@ import {
   nextCustomId,
   updateCar,
 } from "@/lib/store";
+import PhotoUploader from "@/components/PhotoUploader";
 
 // Demo-only gate. This is NOT real authentication — anyone can read this
 // password from the source code. Replace with real auth (e.g. Supabase
@@ -27,6 +28,7 @@ const EMPTY_FORM = {
   owners: 1,
   location: "",
   color: "#2b6cb0",
+  images: [] as string[],
   description: "",
 };
 
@@ -78,6 +80,7 @@ export default function AdminPage() {
       owners: car.owners,
       location: car.location,
       color: car.color,
+      images: car.images ?? [],
       description: car.description,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -101,6 +104,7 @@ export default function AdminPage() {
       owners: Number(form.owners),
       location: form.location.trim(),
       color: form.color,
+      images: form.images,
       description: form.description.trim(),
       status: "Live",
     };
@@ -172,7 +176,16 @@ export default function AdminPage() {
         </select>
         <input required placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="input" />
         <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input col-span-2 sm:col-span-3" />
-        <input type="color" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} className="h-10 w-full rounded-lg border border-slate-300" />
+        <label className="block">
+          <span className="mb-1 block text-xs font-medium text-slate-500">Fallback color</span>
+          <input type="color" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} className="h-10 w-full rounded-lg border border-slate-300" />
+        </label>
+
+        <div className="col-span-2 sm:col-span-4">
+          <span className="mb-1.5 block text-xs font-medium text-slate-500">Photos</span>
+          <PhotoUploader images={form.images} onChange={(images) => setForm({ ...form, images })} />
+        </div>
+
         <div className="col-span-2 flex gap-2 sm:col-span-4">
           <button type="submit" className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">
             {editingId ? "Save changes" : "Add listing"}
@@ -199,7 +212,17 @@ export default function AdminPage() {
           <tbody className="divide-y divide-slate-100">
             {cars.map((car) => (
               <tr key={car.id}>
-                <td className="px-4 py-3 font-medium text-slate-800">
+                <td className="flex items-center gap-3 px-4 py-3 font-medium text-slate-800">
+                  {car.images && car.images.length > 0 ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- data URLs from localStorage
+                    <img src={car.images[0]} alt="" className="h-9 w-12 rounded object-cover" />
+                  ) : (
+                    <span
+                      className="h-9 w-12 shrink-0 rounded"
+                      style={{ backgroundColor: car.color }}
+                      title="Using generated illustration, no photos uploaded"
+                    />
+                  )}
                   {car.year} {car.brand} {car.model}
                 </td>
                 <td className="px-4 py-3">{formatPrice(car.price)}</td>

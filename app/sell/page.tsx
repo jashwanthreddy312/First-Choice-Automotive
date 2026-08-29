@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { addCar, nextCustomId } from "@/lib/store";
 import { Car, FuelType, Transmission } from "@/lib/types";
+import PhotoUploader from "@/components/PhotoUploader";
 
 const PALETTE = ["#e2504b", "#2b6cb0", "#38761d", "#b45309", "#7c3aed", "#0f766e"];
 
@@ -18,6 +19,7 @@ export default function SellPage() {
     transmission: "Manual" as Transmission,
     owners: 1,
     location: "",
+    images: [] as string[],
     description: "",
   });
   const [done, setDone] = useState(false);
@@ -36,6 +38,7 @@ export default function SellPage() {
       owners: Number(form.owners),
       location: form.location.trim(),
       color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+      images: form.images,
       description: form.description.trim() || "Seller-submitted listing.",
       status: "Pending Inspection",
     };
@@ -188,6 +191,13 @@ export default function SellPage() {
             placeholder="Any notable features, service history, accidents..."
           />
         </Field>
+
+        <div>
+          <span className="mb-1.5 block text-xs font-medium text-slate-500">
+            Photos (optional, but listings with photos get inspected faster)
+          </span>
+          <PhotoUploader images={form.images} onChange={(images) => setForm({ ...form, images })} />
+        </div>
 
         <button
           type="submit"

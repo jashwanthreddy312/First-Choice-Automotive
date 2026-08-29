@@ -12,7 +12,8 @@ export type Car = {
   transmission: Transmission;
   owners: number;
   location: string;
-  color: string; // hex, used for the placeholder illustration
+  color: string; // hex, used for the generated illustration fallback
+  images?: string[]; // real uploaded photos (data URLs); overrides the illustration when present
   description: string;
   featured?: boolean;
   status?: "Live" | "Pending Inspection" | "Sold";
