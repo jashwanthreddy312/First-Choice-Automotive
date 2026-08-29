@@ -73,14 +73,7 @@ export default function HomePage() {
       <section className="relative mt-8 overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 via-blue-950 to-blue-800 px-6 py-14 text-white sm:px-10 sm:py-16">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         <div className="relative animate-fade-up">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-blue-100 ring-1 ring-white/15">
-            <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
-              <path d="M12 2 3 6v6c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V6l-9-4Z" stroke="currentColor" strokeWidth="1.6" />
-              <path d="m9 12 2 2 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            200-point inspected &middot; warranty included
-          </span>
-          <h1 className="mt-5 max-w-2xl font-[family-name:var(--font-heading)] text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
+          <h1 className="max-w-2xl font-[family-name:var(--font-heading)] text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
             Buy your next used car, hassle-free.
           </h1>
           <p className="mt-4 max-w-xl text-blue-100/90">
@@ -92,19 +85,6 @@ export default function HomePage() {
             <p className="text-xs text-blue-100/70">cars available</p>
           </div>
         </div>
-      </section>
-
-      <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {[
-          { step: "01", title: "Search & compare", body: "Filter by budget, fuel and brand across our inspected inventory." },
-          { step: "02", title: "Drive home", body: "Visit the showroom or call us, then doorstep delivery once you're ready to buy." },
-        ].map((s) => (
-          <div key={s.step} className="rounded-xl border border-slate-200 bg-white p-4">
-            <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-blue-700">{s.step}</span>
-            <h3 className="mt-1 font-[family-name:var(--font-heading)] text-base font-bold text-slate-900">{s.title}</h3>
-            <p className="mt-1 text-sm text-slate-500">{s.body}</p>
-          </div>
-        ))}
       </section>
 
       <section className="mt-10 grid grid-cols-1 gap-6 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 lg:grid-cols-5 lg:gap-10">
@@ -121,7 +101,7 @@ export default function HomePage() {
             recondition every vehicle ourselves before it reaches our
             showroom floor &mdash; no dealer network, no hidden middlemen,
             just a team that knows every car on the lot personally. Every
-            listing here comes with a 200-point inspection report and a
+            listing here comes with a full inspection report and a
             transparent price, so you know exactly what you&rsquo;re paying for.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
@@ -146,12 +126,6 @@ export default function HomePage() {
               {BRANCH.rating}&#9733;
             </p>
             <p className="mt-1 text-xs text-slate-500">Rated on Google</p>
-          </div>
-          <div className="rounded-xl bg-blue-50 p-4">
-            <p className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-blue-700">
-              200
-            </p>
-            <p className="mt-1 text-xs text-slate-500">Point inspection, every car</p>
           </div>
           <div className="rounded-xl bg-blue-50 p-4">
             <p className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-blue-700">
