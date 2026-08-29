@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { Car } from "@/lib/types";
 import { formatPrice } from "@/lib/data";
+import { getInspectionReport, STATUS_BADGE, STATUS_DOT } from "@/lib/inspection";
 import CarImage from "./CarImage";
 
 export default function CarCard({ car }: { car: Car }) {
   const sold = car.status === "Sold";
+  const report = getInspectionReport(car);
+  const exterior = report.find((item) => item.category === "Exterior")!;
+  const interior = report.find((item) => item.category === "Interior")!;
 
   return (
     <Link
@@ -61,6 +65,20 @@ export default function CarCard({ car }: { car: Car }) {
           <span>{car.transmission}</span>
           <span>&middot;</span>
           <span>{car.owners === 1 ? "1st Owner" : `${car.owners} Owners`}</span>
+        </div>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${STATUS_BADGE[exterior.status]}`}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[exterior.status]}`} />
+            Exterior: {exterior.status}
+          </span>
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${STATUS_BADGE[interior.status]}`}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[interior.status]}`} />
+            Interior: {interior.status}
+          </span>
         </div>
         <p className="mt-2 flex items-center gap-1 text-xs font-medium text-slate-400">
           <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">

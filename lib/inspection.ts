@@ -102,3 +102,15 @@ export function getOverallScore(report: InspectionItem[]): number {
   const total = report.reduce((sum, item) => sum + STATUS_SCORE[item.status], 0);
   return Math.round(total / report.length);
 }
+
+export const STATUS_DOT: Record<InspectionStatus, string> = {
+  Good: "bg-green-500",
+  Fair: "bg-amber-500",
+  "Needs Attention": "bg-red-500",
+};
+
+export const STATUS_BADGE: Record<InspectionStatus, string> = {
+  Good: "bg-green-50 text-green-700 ring-green-200",
+  Fair: "bg-amber-50 text-amber-700 ring-amber-200",
+  "Needs Attention": "bg-red-50 text-red-700 ring-red-200",
+};
