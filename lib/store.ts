@@ -17,9 +17,25 @@ function read<T>(key: string, fallback: T): T {
   }
 }
 
+export class StorageFullError extends Error {
+  constructor() {
+    super(
+      "Your browser's storage is full. Try removing a photo or two, or delete an older listing, then try again."
+    );
+    this.name = "StorageFullError";
+  }
+}
+
 function write<T>(key: string, value: T) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(key, JSON.stringify(value));
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "QuotaExceededError") {
+      throw new StorageFullError();
+    }
+    throw err;
+  }
 }
 
 export function getCustomCars(): Car[] {

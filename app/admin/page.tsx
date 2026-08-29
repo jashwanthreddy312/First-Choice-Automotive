@@ -8,6 +8,7 @@ import {
   deleteCar,
   getAllCars,
   nextCustomId,
+  StorageFullError,
   updateCar,
 } from "@/lib/store";
 import PhotoUploader from "@/components/PhotoUploader";
@@ -42,6 +43,7 @@ export default function AdminPage() {
   const [cars, setCars] = useState<Car[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     // sessionStorage isn't available during SSR, so the login check has
@@ -95,6 +97,7 @@ export default function AdminPage() {
   function cancelEdit() {
     setEditingId(null);
     setForm(EMPTY_FORM);
+    setSaveError("");
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -117,13 +120,22 @@ export default function AdminPage() {
       status: form.status,
     };
 
-    if (editingId) {
-      updateCar(editingId, payload);
-    } else {
-      addCar({ id: nextCustomId(), ...payload } as Car);
+    try {
+      if (editingId) {
+        updateCar(editingId, payload);
+      } else {
+        addCar({ id: nextCustomId(), ...payload } as Car);
+      }
+      setSaveError("");
+      cancelEdit();
+      refresh();
+    } catch (err) {
+      setSaveError(
+        err instanceof StorageFullError
+          ? err.message
+          : "Something went wrong saving this listing."
+      );
     }
-    cancelEdit();
-    refresh();
   }
 
   function handleDelete(id: string) {
@@ -208,6 +220,10 @@ export default function AdminPage() {
           <span className="mb-1.5 block text-xs font-medium text-slate-500">Photos</span>
           <PhotoUploader images={form.images} onChange={(images) => setForm({ ...form, images })} />
         </div>
+
+        {saveError && (
+          <p className="col-span-2 text-sm text-red-600 sm:col-span-4">{saveError}</p>
+        )}
 
         <div className="col-span-2 flex gap-2 sm:col-span-4">
           <button type="submit" className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">

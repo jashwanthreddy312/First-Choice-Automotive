@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { filesToDataUrls } from "@/lib/image";
 
-const MAX_PHOTOS = 6;
+const MAX_PHOTOS = 12;
 
 export default function PhotoUploader({
   images,
