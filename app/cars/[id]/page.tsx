@@ -7,6 +7,8 @@ import { Car } from "@/lib/types";
 import { formatPrice } from "@/lib/data";
 import { getCarById } from "@/lib/store";
 import CarGallery from "@/components/CarGallery";
+import QualityReport from "@/components/QualityReport";
+import EmiCalculator from "@/components/EmiCalculator";
 
 const SPEC_ICONS: Record<string, React.ReactNode> = {
   km: (
@@ -32,6 +34,18 @@ const SPEC_ICONS: Record<string, React.ReactNode> = {
     <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-blue-600">
       <circle cx="12" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.6" />
       <path d="M5 20c1.2-3.5 4-5 7-5s5.8 1.5 7 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  ),
+  body: (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-blue-600">
+      <path d="M4 16V9l3-4h10l3 4v7" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M4 16h16M7 16v2M17 16v2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  ),
+  insurance: (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-blue-600">
+      <path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6l7-3Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="m9 12 2 2 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
 };
@@ -65,7 +79,7 @@ export default function CarDetailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 animate-fade-up">
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 animate-fade-up">
       <button
         onClick={() => router.push("/")}
         className="mb-4 text-sm font-medium text-blue-700 hover:underline"
@@ -98,7 +112,10 @@ export default function CarDetailPage() {
             {formatPrice(car.price)}
           </p>
 
-          <dl className="mt-6 grid grid-cols-2 gap-4 rounded-xl border border-slate-200 bg-white p-4 text-sm shadow-sm">
+          <h2 className="mt-6 font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-wide text-slate-500">
+            Overview
+          </h2>
+          <dl className="mt-2 grid grid-cols-2 gap-4 rounded-xl border border-slate-200 bg-white p-4 text-sm shadow-sm">
             <div className="flex items-start gap-2">
               {SPEC_ICONS.km}
               <div>
@@ -131,6 +148,24 @@ export default function CarDetailPage() {
                 </dd>
               </div>
             </div>
+            {car.bodyType && (
+              <div className="flex items-start gap-2">
+                {SPEC_ICONS.body}
+                <div>
+                  <dt className="text-slate-400">Body Type</dt>
+                  <dd className="font-semibold text-slate-800">{car.bodyType}</dd>
+                </div>
+              </div>
+            )}
+            {car.insurance && (
+              <div className="flex items-start gap-2">
+                {SPEC_ICONS.insurance}
+                <div>
+                  <dt className="text-slate-400">Insurance</dt>
+                  <dd className="font-semibold text-slate-800">{car.insurance}</dd>
+                </div>
+              </div>
+            )}
           </dl>
 
           <p className="mt-6 text-sm leading-relaxed text-slate-600">
@@ -159,6 +194,11 @@ export default function CarDetailPage() {
             </button>
           )}
         </div>
+      </div>
+
+      <div className="mt-8 space-y-6">
+        <QualityReport car={car} />
+        {car.status !== "Sold" && <EmiCalculator price={car.price} />}
       </div>
     </div>
   );

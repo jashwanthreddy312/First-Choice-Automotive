@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Car, FuelType, Transmission } from "@/lib/types";
+import { BodyType, Car, FuelType, Transmission } from "@/lib/types";
 import { formatPrice } from "@/lib/data";
 import {
   addCar,
@@ -27,6 +27,8 @@ const EMPTY_FORM = {
   transmission: "Manual" as Transmission,
   owners: 1,
   location: "",
+  bodyType: "Hatchback" as BodyType,
+  insurance: "",
   color: "#2b6cb0",
   images: [] as string[],
   description: "",
@@ -80,6 +82,8 @@ export default function AdminPage() {
       transmission: car.transmission,
       owners: car.owners,
       location: car.location,
+      bodyType: car.bodyType ?? "Hatchback",
+      insurance: car.insurance ?? "",
       color: car.color,
       images: car.images ?? [],
       description: car.description,
@@ -105,6 +109,8 @@ export default function AdminPage() {
       transmission: form.transmission,
       owners: Number(form.owners),
       location: form.location.trim(),
+      bodyType: form.bodyType,
+      insurance: form.insurance.trim() || undefined,
       color: form.color,
       images: form.images,
       description: form.description.trim(),
@@ -182,6 +188,10 @@ export default function AdminPage() {
           {["Manual", "Automatic"].map((t) => <option key={t}>{t}</option>)}
         </select>
         <input required placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="input" />
+        <select value={form.bodyType} onChange={(e) => setForm({ ...form, bodyType: e.target.value as BodyType })} className="input">
+          {["Hatchback", "Sedan", "SUV", "MUV"].map((b) => <option key={b}>{b}</option>)}
+        </select>
+        <input placeholder="Insurance (e.g. Comprehensive, valid till Mar 2027)" value={form.insurance} onChange={(e) => setForm({ ...form, insurance: e.target.value })} className="input col-span-2" />
         <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input col-span-2 sm:col-span-3" />
         <label className="block">
           <span className="mb-1 block text-xs font-medium text-slate-500">Fallback color</span>
