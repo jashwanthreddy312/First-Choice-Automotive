@@ -23,7 +23,7 @@ const sora = Sora({
 export const metadata: Metadata = {
   title: "First-Choice Automotive — Quality Used Cars",
   description:
-    "A demo dealership site inspired by Cars24 and Spinny — browse 200-point inspected listings and filter by budget.",
+    "First-Choice Automotive is a Madgulapally-based used car dealership offering 200-point inspected vehicles at transparent, no-haggle pricing.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
