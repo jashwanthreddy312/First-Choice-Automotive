@@ -7,7 +7,7 @@ import { SEED_CARS } from "@/lib/data";
 import { getAllCars } from "@/lib/store";
 import { BRANCH, SALES_PHONE } from "@/lib/locations";
 import CarCard from "@/components/CarCard";
-import FilterBar, { DEFAULT_FILTERS, Filters } from "@/components/FilterBar";
+import FilterBar, { DEFAULT_FILTERS, Filters, getPriceCeiling } from "@/components/FilterBar";
 
 export default function HomePage() {
   const [cars, setCars] = useState<Car[]>(SEED_CARS);
@@ -17,14 +17,20 @@ export default function HomePage() {
     // localStorage isn't available during SSR, so we render the seed data
     // first and swap in the full list (seed + locally added cars) after
     // mount to avoid a hydration mismatch.
+    const allCars = getAllCars();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCars(getAllCars());
+    setCars(allCars);
+    // Default the budget slider to cover every car in inventory, so
+    // nothing above the old hardcoded ₹25L cap is hidden by default.
+    setFilters((f) => ({ ...f, maxPrice: getPriceCeiling(allCars) }));
   }, []);
 
   const brands = useMemo(
     () => Array.from(new Set(cars.map((c) => c.brand))).sort(),
     [cars]
   );
+
+  const priceCeiling = useMemo(() => getPriceCeiling(cars), [cars]);
 
   const filtered = useMemo(() => {
     let result = cars.filter((c) => {
@@ -143,7 +149,12 @@ export default function HomePage() {
       </section>
 
       <section className="mt-8">
-        <FilterBar filters={filters} onChange={setFilters} brands={brands} />
+        <FilterBar
+          filters={filters}
+          onChange={setFilters}
+          brands={brands}
+          maxBudget={priceCeiling}
+        />
       </section>
 
       <section className="mt-6">

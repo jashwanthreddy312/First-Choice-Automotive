@@ -1,5 +1,7 @@
 "use client";
 
+import { Car } from "@/lib/types";
+
 export type Filters = {
   query: string;
   brand: string;
@@ -9,23 +11,35 @@ export type Filters = {
   sort: string;
 };
 
+const MIN_BUDGET_CEILING = 2500000;
+
 export const DEFAULT_FILTERS: Filters = {
   query: "",
   brand: "All",
   fuel: "All",
   transmission: "All",
-  maxPrice: 2500000,
+  maxPrice: MIN_BUDGET_CEILING,
   sort: "featured",
 };
+
+// The budget slider's upper bound has to cover whatever is actually in
+// inventory — a hardcoded cap silently hid any car priced above it, with
+// no way for the slider to ever reach it.
+export function getPriceCeiling(cars: Car[]): number {
+  const highest = cars.reduce((max, c) => Math.max(max, c.price), 0);
+  return Math.max(MIN_BUDGET_CEILING, Math.ceil(highest / 100000) * 100000);
+}
 
 export default function FilterBar({
   filters,
   onChange,
   brands,
+  maxBudget,
 }: {
   filters: Filters;
   onChange: (f: Filters) => void;
   brands: string[];
+  maxBudget: number;
 }) {
   function update<K extends keyof Filters>(key: K, value: Filters[K]) {
     onChange({ ...filters, [key]: value });
@@ -88,7 +102,7 @@ export default function FilterBar({
         <input
           type="range"
           min={200000}
-          max={2500000}
+          max={maxBudget}
           step={50000}
           value={filters.maxPrice}
           onChange={(e) => update("maxPrice", Number(e.target.value))}
