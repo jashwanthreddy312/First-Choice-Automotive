@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { BodyType, Car, FuelType, PriceType, Transmission } from "@/lib/types";
 import { formatPrice } from "@/lib/data";
+import SalesHistory from "@/components/SalesHistory";
 import {
   addCar,
   deleteCar,
@@ -35,6 +36,7 @@ const EMPTY_FORM = {
   images: [] as string[],
   description: "",
   status: "Live" as Car["status"],
+  soldPrice: "",
 };
 
 export default function AdminPage() {
@@ -92,6 +94,7 @@ export default function AdminPage() {
       images: car.images ?? [],
       description: car.description,
       status: car.status ?? "Live",
+      soldPrice: car.soldPrice != null ? String(car.soldPrice) : "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -104,6 +107,7 @@ export default function AdminPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const existingCar = editingId ? cars.find((c) => c.id === editingId) : undefined;
     const payload: Partial<Car> = {
       brand: form.brand.trim(),
       model: form.model.trim(),
@@ -121,6 +125,14 @@ export default function AdminPage() {
       images: form.images,
       description: form.description.trim(),
       status: form.status,
+      soldPrice:
+        form.status === "Sold" && form.soldPrice
+          ? Number(form.soldPrice)
+          : undefined,
+      soldAt:
+        form.status === "Sold"
+          ? existingCar?.soldAt ?? new Date().toISOString()
+          : undefined,
     };
 
     try {
@@ -148,7 +160,22 @@ export default function AdminPage() {
   }
 
   function toggleSold(car: Car) {
-    updateCar(car.id, { status: car.status === "Sold" ? "Live" : "Sold" });
+    if (car.status === "Sold") {
+      updateCar(car.id, { status: "Live", soldPrice: undefined, soldAt: undefined });
+      refresh();
+      return;
+    }
+    const input = window.prompt(
+      `Sold price for ${car.year} ${car.brand} ${car.model} (₹)`,
+      String(car.price)
+    );
+    if (input === null) return; // cancelled
+    const soldPrice = Number(input);
+    updateCar(car.id, {
+      status: "Sold",
+      soldPrice: Number.isFinite(soldPrice) && soldPrice > 0 ? soldPrice : car.price,
+      soldAt: new Date().toISOString(),
+    });
     refresh();
   }
 
@@ -221,6 +248,20 @@ export default function AdminPage() {
             {["Live", "Sold", "Pending Inspection"].map((s) => <option key={s}>{s}</option>)}
           </select>
         </label>
+        {form.status === "Sold" && (
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-slate-500">
+              Sold price (₹) &mdash; may differ from listed price
+            </span>
+            <input
+              type="number"
+              placeholder={form.price || "Sold price"}
+              value={form.soldPrice}
+              onChange={(e) => setForm({ ...form, soldPrice: e.target.value })}
+              className="input"
+            />
+          </label>
+        )}
 
         <div className="col-span-2 sm:col-span-4">
           <span className="mb-1.5 block text-xs font-medium text-slate-500">Photos</span>
@@ -275,6 +316,11 @@ export default function AdminPage() {
                   {car.priceType && (
                     <span className="ml-1.5 text-xs text-slate-400">({car.priceType})</span>
                   )}
+                  {car.status === "Sold" && car.soldPrice != null && car.soldPrice !== car.price && (
+                    <div className="text-xs text-slate-500">
+                      Sold for {formatPrice(car.soldPrice)}
+                    </div>
+                  )}
                 </td>
                 <td className="px-4 py-3">{car.location}</td>
                 <td className="px-4 py-3">
@@ -306,6 +352,8 @@ export default function AdminPage() {
           </tbody>
         </table>
       </div>
+
+      <SalesHistory cars={cars} />
     </div>
   );
 }

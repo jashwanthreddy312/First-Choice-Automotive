@@ -123,15 +123,21 @@ export default function HomePage() {
         <div className="grid grid-cols-2 gap-3 lg:col-span-2">
           <div className="rounded-xl bg-blue-50 p-4">
             <p className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-blue-700">
-              {BRANCH.rating}&#9733;
+              500+
             </p>
-            <p className="mt-1 text-xs text-slate-500">Rated on Google</p>
+            <p className="mt-1 text-xs text-slate-500">Cars sold</p>
           </div>
           <div className="rounded-xl bg-blue-50 p-4">
             <p className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-blue-700">
-              1
+              2010
             </p>
-            <p className="mt-1 text-xs text-slate-500">Showroom, personally run</p>
+            <p className="mt-1 text-xs text-slate-500">Serving customers since</p>
+          </div>
+          <div className="rounded-xl bg-blue-50 p-4">
+            <p className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-blue-700">
+              {BRANCH.rating}&#9733;
+            </p>
+            <p className="mt-1 text-xs text-slate-500">Rated on Google</p>
           </div>
           <div className="rounded-xl bg-blue-50 p-4">
             <p className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-blue-700">

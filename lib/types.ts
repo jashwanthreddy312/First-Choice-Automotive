@@ -22,4 +22,6 @@ export type Car = {
   description: string;
   featured?: boolean;
   status?: "Live" | "Pending Inspection" | "Sold";
+  soldPrice?: number; // actual price it sold for, once status is "Sold" — can differ from the listed `price`
+  soldAt?: string; // ISO date the sale was recorded
 };
