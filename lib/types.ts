@@ -1,6 +1,7 @@
 export type FuelType = "Petrol" | "Diesel" | "CNG" | "Electric";
 export type Transmission = "Manual" | "Automatic";
 export type BodyType = "Hatchback" | "Sedan" | "SUV" | "MUV";
+export type PriceType = "Negotiable" | "Slightly Negotiable" | "Fixed";
 
 export type Car = {
   id: string;
@@ -8,6 +9,7 @@ export type Car = {
   model: string;
   year: number;
   price: number; // INR
+  priceType?: PriceType;
   km: number;
   fuel: FuelType;
   transmission: Transmission;

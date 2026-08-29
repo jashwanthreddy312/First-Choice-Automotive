@@ -92,11 +92,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {[
           { step: "01", title: "Search & compare", body: "Filter by budget, fuel and brand across our inspected inventory." },
-          { step: "02", title: "Book a test drive", body: "Request a callback and take it for a spin at your convenience." },
-          { step: "03", title: "Drive home", body: "Doorstep delivery once you're ready to buy." },
+          { step: "02", title: "Drive home", body: "Visit the showroom or call us, then doorstep delivery once you're ready to buy." },
         ].map((s) => (
           <div key={s.step} className="rounded-xl border border-slate-200 bg-white p-4">
             <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-blue-700">{s.step}</span>

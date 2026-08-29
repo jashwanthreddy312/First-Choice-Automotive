@@ -2,16 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { formatPrice } from "@/lib/data";
+import { calculateEmi } from "@/lib/emi";
 
 const TENURE_OPTIONS = [12, 24, 36, 48, 60, 72];
-
-function calculateEmi(principal: number, annualRatePercent: number, months: number) {
-  if (principal <= 0 || months <= 0) return 0;
-  const monthlyRate = annualRatePercent / 12 / 100;
-  if (monthlyRate === 0) return principal / months;
-  const factor = Math.pow(1 + monthlyRate, months);
-  return (principal * monthlyRate * factor) / (factor - 1);
-}
 
 export default function EmiCalculator({ price }: { price: number }) {
   const [downPaymentPct, setDownPaymentPct] = useState(20);

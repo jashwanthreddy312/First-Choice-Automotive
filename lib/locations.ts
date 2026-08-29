@@ -8,6 +8,9 @@ export type Branch = {
   rating: number;
 };
 
+// Sales contact number shown as the "Call" option on listing pages.
+export const SALES_PHONE = "709522422";
+
 // The dealership's one real location.
 export const BRANCH: Branch = {
   id: "main",

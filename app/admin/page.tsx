@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BodyType, Car, FuelType, Transmission } from "@/lib/types";
+import { BodyType, Car, FuelType, PriceType, Transmission } from "@/lib/types";
 import { formatPrice } from "@/lib/data";
 import {
   addCar,
@@ -23,6 +23,7 @@ const EMPTY_FORM = {
   model: "",
   year: new Date().getFullYear(),
   price: "",
+  priceType: "Fixed" as PriceType,
   km: "",
   fuel: "Petrol" as FuelType,
   transmission: "Manual" as Transmission,
@@ -79,6 +80,7 @@ export default function AdminPage() {
       model: car.model,
       year: car.year,
       price: String(car.price),
+      priceType: car.priceType ?? "Fixed",
       km: String(car.km),
       fuel: car.fuel,
       transmission: car.transmission,
@@ -107,6 +109,7 @@ export default function AdminPage() {
       model: form.model.trim(),
       year: Number(form.year),
       price: Number(form.price),
+      priceType: form.priceType,
       km: Number(form.km),
       fuel: form.fuel,
       transmission: form.transmission,
@@ -192,6 +195,9 @@ export default function AdminPage() {
         <input required placeholder="Model" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} className="input" />
         <input required type="number" placeholder="Year" value={form.year} onChange={(e) => setForm({ ...form, year: Number(e.target.value) })} className="input" />
         <input required type="number" placeholder="Price (₹)" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="input" />
+        <select value={form.priceType} onChange={(e) => setForm({ ...form, priceType: e.target.value as PriceType })} className="input">
+          {["Fixed", "Slightly Negotiable", "Negotiable"].map((p) => <option key={p}>{p}</option>)}
+        </select>
         <input required type="number" placeholder="KM driven" value={form.km} onChange={(e) => setForm({ ...form, km: e.target.value })} className="input" />
         <select value={form.fuel} onChange={(e) => setForm({ ...form, fuel: e.target.value as FuelType })} className="input">
           {["Petrol", "Diesel", "CNG", "Electric"].map((f) => <option key={f}>{f}</option>)}
@@ -264,7 +270,12 @@ export default function AdminPage() {
                   )}
                   {car.year} {car.brand} {car.model}
                 </td>
-                <td className="px-4 py-3">{formatPrice(car.price)}</td>
+                <td className="px-4 py-3">
+                  {formatPrice(car.price)}
+                  {car.priceType && (
+                    <span className="ml-1.5 text-xs text-slate-400">({car.priceType})</span>
+                  )}
+                </td>
                 <td className="px-4 py-3">{car.location}</td>
                 <td className="px-4 py-3">
                   <span

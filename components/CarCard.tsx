@@ -2,7 +2,14 @@ import Link from "next/link";
 import { Car } from "@/lib/types";
 import { formatPrice } from "@/lib/data";
 import { getInspectionReport, STATUS_BADGE, STATUS_DOT } from "@/lib/inspection";
+import { getStartingEmi } from "@/lib/emi";
 import CarImage from "./CarImage";
+
+const PRICE_TYPE_STYLE: Record<string, string> = {
+  Negotiable: "bg-blue-50 text-blue-700",
+  "Slightly Negotiable": "bg-violet-50 text-violet-700",
+  Fixed: "bg-slate-100 text-slate-600",
+};
 
 export default function CarCard({ car }: { car: Car }) {
   const sold = car.status === "Sold";
@@ -54,9 +61,26 @@ export default function CarCard({ car }: { car: Car }) {
         <h3 className="font-[family-name:var(--font-heading)] text-base font-bold tracking-tight text-slate-900 group-hover:text-blue-700">
           {car.year} {car.brand} {car.model}
         </h3>
-        <p className={`mt-1 text-lg font-bold ${sold ? "text-slate-400" : "text-blue-700"}`}>
-          {formatPrice(car.price)}
-        </p>
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          <p className={`text-lg font-bold ${sold ? "text-slate-400" : "text-blue-700"}`}>
+            {formatPrice(car.price)}
+          </p>
+          {!sold && car.priceType && (
+            <span
+              className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${PRICE_TYPE_STYLE[car.priceType]}`}
+            >
+              {car.priceType}
+            </span>
+          )}
+        </div>
+        {!sold && (
+          <p className="text-xs text-slate-400">
+            EMI starts at{" "}
+            <span className="font-semibold text-slate-600">
+              {formatPrice(getStartingEmi(car.price))}/mo
+            </span>
+          </p>
+        )}
         <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">
           <span>{car.km.toLocaleString("en-IN")} km</span>
           <span>&middot;</span>

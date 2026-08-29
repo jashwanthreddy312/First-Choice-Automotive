@@ -6,9 +6,16 @@ import Link from "next/link";
 import { Car } from "@/lib/types";
 import { formatPrice } from "@/lib/data";
 import { getCarById } from "@/lib/store";
+import { SALES_PHONE } from "@/lib/locations";
 import CarGallery from "@/components/CarGallery";
 import QualityReport from "@/components/QualityReport";
 import EmiCalculator from "@/components/EmiCalculator";
+
+const PRICE_TYPE_STYLE: Record<string, string> = {
+  Negotiable: "bg-blue-50 text-blue-700",
+  "Slightly Negotiable": "bg-violet-50 text-violet-700",
+  Fixed: "bg-slate-100 text-slate-600",
+};
 
 const SPEC_ICONS: Record<string, React.ReactNode> = {
   km: (
@@ -54,7 +61,6 @@ export default function CarDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [car, setCar] = useState<Car | null | undefined>(undefined);
-  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     // localStorage isn't available during SSR, so we look the car up
@@ -108,9 +114,18 @@ export default function CarDetailPage() {
             {car.year} {car.brand} {car.model}
           </h1>
           <p className="mt-1 text-sm text-slate-500">{car.location}</p>
-          <p className={`mt-3 text-3xl font-extrabold ${car.status === "Sold" ? "text-slate-400" : "text-blue-700"}`}>
-            {formatPrice(car.price)}
-          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <p className={`text-3xl font-extrabold ${car.status === "Sold" ? "text-slate-400" : "text-blue-700"}`}>
+              {formatPrice(car.price)}
+            </p>
+            {car.status !== "Sold" && car.priceType && (
+              <span
+                className={`rounded-full px-2.5 py-1 text-xs font-semibold ${PRICE_TYPE_STYLE[car.priceType]}`}
+              >
+                {car.priceType}
+              </span>
+            )}
+          </div>
 
           <h2 className="mt-6 font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-wide text-slate-500">
             Overview
@@ -180,18 +195,29 @@ export default function CarDetailPage() {
               </Link>
               .
             </div>
-          ) : submitted ? (
-            <div className="mt-6 rounded-lg bg-green-50 p-4 text-sm text-green-700">
-              Thanks! A First-Choice Automotive advisor will call you
-              shortly to schedule a test drive.
-            </div>
           ) : (
-            <button
-              onClick={() => setSubmitted(true)}
-              className="mt-6 w-full rounded-lg bg-blue-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-800 active:scale-[0.99]"
-            >
-              Request a callback / test drive
-            </button>
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <Link
+                href="/locations"
+                className="rounded-lg bg-blue-700 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-800 active:scale-[0.99]"
+              >
+                Visit showroom
+              </Link>
+              <a
+                href={`tel:${SALES_PHONE}`}
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-blue-700 px-4 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 active:scale-[0.99]"
+              >
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+                  <path
+                    d="M4 5c0-.6.4-1 1-1h3l2 5-2 1.5a11 11 0 0 0 5.5 5.5L15 14l5 2v3c0 .6-.4 1-1 1A15 15 0 0 1 4 5Z"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Call {SALES_PHONE}
+              </a>
+            </div>
           )}
         </div>
       </div>
