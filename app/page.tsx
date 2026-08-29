@@ -85,19 +85,9 @@ export default function HomePage() {
             Transparent pricing, no haggling, and doorstep delivery. Find
             your next car from our inspected inventory in minutes.
           </p>
-          <div className="mt-8 grid max-w-xl grid-cols-3 gap-3 text-sm">
-            <div className="rounded-xl bg-white/5 px-3 py-3 text-center ring-1 ring-white/10">
-              <p className="font-[family-name:var(--font-heading)] text-xl font-bold">{cars.length}+</p>
-              <p className="mt-0.5 text-xs text-blue-100/70">cars available</p>
-            </div>
-            <div className="rounded-xl bg-white/5 px-3 py-3 text-center ring-1 ring-white/10">
-              <p className="font-[family-name:var(--font-heading)] text-xl font-bold">Free</p>
-              <p className="mt-0.5 text-xs text-blue-100/70">RC transfer</p>
-            </div>
-            <div className="rounded-xl bg-white/5 px-3 py-3 text-center ring-1 ring-white/10">
-              <p className="font-[family-name:var(--font-heading)] text-xl font-bold">5-day</p>
-              <p className="mt-0.5 text-xs text-blue-100/70">money-back guarantee</p>
-            </div>
+          <div className="mt-8 inline-flex items-center gap-3 rounded-xl bg-white/5 px-5 py-3 text-sm ring-1 ring-white/10">
+            <p className="font-[family-name:var(--font-heading)] text-xl font-bold">{cars.length}+</p>
+            <p className="text-xs text-blue-100/70">cars available</p>
           </div>
         </div>
       </section>
@@ -106,7 +96,7 @@ export default function HomePage() {
         {[
           { step: "01", title: "Search & compare", body: "Filter by budget, fuel and brand across our inspected inventory." },
           { step: "02", title: "Book a test drive", body: "Request a callback and take it for a spin at your convenience." },
-          { step: "03", title: "Drive home", body: "Free RC transfer and doorstep delivery once you're ready to buy." },
+          { step: "03", title: "Drive home", body: "Doorstep delivery once you're ready to buy." },
         ].map((s) => (
           <div key={s.step} className="rounded-xl border border-slate-200 bg-white p-4">
             <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-blue-700">{s.step}</span>
