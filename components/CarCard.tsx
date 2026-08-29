@@ -4,31 +4,42 @@ import { formatPrice } from "@/lib/data";
 import CarImage from "./CarImage";
 
 export default function CarCard({ car }: { car: Car }) {
+  const sold = car.status === "Sold";
+
   return (
     <Link
       href={`/cars/${car.id}`}
       className="group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/10"
     >
       <div className="relative overflow-hidden">
-        {car.images && car.images.length > 0 ? (
-          // eslint-disable-next-line @next/next/no-img-element -- data URLs from localStorage
-          <img
-            src={car.images[0]}
-            alt={`${car.year} ${car.brand} ${car.model}`}
-            className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-        ) : (
-          <CarImage
-            color={car.color}
-            className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+        <div className={sold ? "grayscale" : undefined}>
+          {car.images && car.images.length > 0 ? (
+            // eslint-disable-next-line @next/next/no-img-element -- data URLs from localStorage
+            <img
+              src={car.images[0]}
+              alt={`${car.year} ${car.brand} ${car.model}`}
+              className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          ) : (
+            <CarImage
+              color={car.color}
+              className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          )}
+        </div>
+        {sold && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/35">
+            <span className="-rotate-6 rounded border-4 border-white px-4 py-1 text-xl font-extrabold uppercase tracking-widest text-white">
+              Sold
+            </span>
+          </div>
         )}
-        {car.featured && (
+        {!sold && car.featured && (
           <span className="absolute left-3 top-3 rounded-full bg-amber-500 px-2.5 py-1 text-xs font-semibold text-white shadow">
             Featured
           </span>
         )}
-        {car.status === "Pending Inspection" && (
+        {!sold && car.status === "Pending Inspection" && (
           <span className="absolute left-3 top-3 rounded-full bg-slate-700/90 px-2.5 py-1 text-xs font-semibold text-white shadow">
             Pending Inspection
           </span>
@@ -39,7 +50,7 @@ export default function CarCard({ car }: { car: Car }) {
         <h3 className="font-[family-name:var(--font-heading)] text-base font-bold tracking-tight text-slate-900 group-hover:text-blue-700">
           {car.year} {car.brand} {car.model}
         </h3>
-        <p className="mt-1 text-lg font-bold text-blue-700">
+        <p className={`mt-1 text-lg font-bold ${sold ? "text-slate-400" : "text-blue-700"}`}>
           {formatPrice(car.price)}
         </p>
         <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">

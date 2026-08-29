@@ -10,9 +10,9 @@ export default function Footer() {
               First-Choice Automotive
             </p>
             <p className="mt-1 max-w-xl">
-              A demo used-car marketplace built to learn how platforms like
-              Cars24 and Spinny work &mdash; browse listings, filter by
-              budget, and submit your own car for sale.
+              A demo dealership site built to learn how platforms like
+              Cars24 and Spinny present inventory &mdash; browse inspected
+              listings and filter by budget.
             </p>
           </div>
           <div className="flex gap-8 text-slate-500">
@@ -21,8 +21,7 @@ export default function Footer() {
                 Explore
               </p>
               <ul className="space-y-1.5">
-                <li><Link href="/" className="hover:text-slate-700">Buy a car</Link></li>
-                <li><Link href="/sell" className="hover:text-slate-700">Sell your car</Link></li>
+                <li><Link href="/" className="hover:text-slate-700">Inventory</Link></li>
                 <li><Link href="/locations" className="hover:text-slate-700">Our locations</Link></li>
               </ul>
             </div>

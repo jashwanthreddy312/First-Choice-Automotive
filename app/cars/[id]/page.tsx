@@ -79,16 +79,22 @@ export default function CarDetailPage() {
         </div>
 
         <div className="lg:col-span-2">
-          {car.featured && (
-            <span className="mb-2 inline-block rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
-              Featured
+          {car.status === "Sold" ? (
+            <span className="mb-2 inline-block rounded-full bg-slate-800 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+              Sold
             </span>
+          ) : (
+            car.featured && (
+              <span className="mb-2 inline-block rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                Featured
+              </span>
+            )
           )}
           <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight text-slate-900">
             {car.year} {car.brand} {car.model}
           </h1>
           <p className="mt-1 text-sm text-slate-500">{car.location}</p>
-          <p className="mt-3 text-3xl font-extrabold text-blue-700">
+          <p className={`mt-3 text-3xl font-extrabold ${car.status === "Sold" ? "text-slate-400" : "text-blue-700"}`}>
             {formatPrice(car.price)}
           </p>
 
@@ -131,7 +137,15 @@ export default function CarDetailPage() {
             {car.description}
           </p>
 
-          {submitted ? (
+          {car.status === "Sold" ? (
+            <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+              This car has been sold. Browse similar cars in our{" "}
+              <Link href="/" className="font-medium text-blue-700 hover:underline">
+                current inventory
+              </Link>
+              .
+            </div>
+          ) : submitted ? (
             <div className="mt-6 rounded-lg bg-green-50 p-4 text-sm text-green-700">
               Thanks! A First-Choice Automotive advisor will call you
               shortly to schedule a test drive.

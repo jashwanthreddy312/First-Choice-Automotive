@@ -79,12 +79,11 @@ export default function HomePage() {
             200-point inspected &middot; warranty included
           </span>
           <h1 className="mt-5 max-w-2xl font-[family-name:var(--font-heading)] text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
-            Buy &amp; sell used cars, hassle-free.
+            Buy your next used car, hassle-free.
           </h1>
           <p className="mt-4 max-w-xl text-blue-100/90">
             Transparent pricing, no haggling, and doorstep delivery. Find
-            your next car in minutes &mdash; or get an instant estimate for
-            the one you&rsquo;re driving now.
+            your next car from our inspected inventory in minutes.
           </p>
           <div className="mt-8 grid max-w-xl grid-cols-3 gap-3 text-sm">
             <div className="rounded-xl bg-white/5 px-3 py-3 text-center ring-1 ring-white/10">

@@ -30,6 +30,7 @@ const EMPTY_FORM = {
   color: "#2b6cb0",
   images: [] as string[],
   description: "",
+  status: "Live" as Car["status"],
 };
 
 export default function AdminPage() {
@@ -82,6 +83,7 @@ export default function AdminPage() {
       color: car.color,
       images: car.images ?? [],
       description: car.description,
+      status: car.status ?? "Live",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -106,7 +108,7 @@ export default function AdminPage() {
       color: form.color,
       images: form.images,
       description: form.description.trim(),
-      status: "Live",
+      status: form.status,
     };
 
     if (editingId) {
@@ -121,6 +123,11 @@ export default function AdminPage() {
   function handleDelete(id: string) {
     if (!confirm("Delete this listing? This cannot be undone.")) return;
     deleteCar(id);
+    refresh();
+  }
+
+  function toggleSold(car: Car) {
+    updateCar(car.id, { status: car.status === "Sold" ? "Live" : "Sold" });
     refresh();
   }
 
@@ -180,6 +187,12 @@ export default function AdminPage() {
           <span className="mb-1 block text-xs font-medium text-slate-500">Fallback color</span>
           <input type="color" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} className="h-10 w-full rounded-lg border border-slate-300" />
         </label>
+        <label className="block">
+          <span className="mb-1 block text-xs font-medium text-slate-500">Status</span>
+          <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Car["status"] })} className="input">
+            {["Live", "Sold", "Pending Inspection"].map((s) => <option key={s}>{s}</option>)}
+          </select>
+        </label>
 
         <div className="col-span-2 sm:col-span-4">
           <span className="mb-1.5 block text-xs font-medium text-slate-500">Photos</span>
@@ -228,11 +241,22 @@ export default function AdminPage() {
                 <td className="px-4 py-3">{formatPrice(car.price)}</td>
                 <td className="px-4 py-3">{car.location}</td>
                 <td className="px-4 py-3">
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs">
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs ${
+                      car.status === "Sold"
+                        ? "bg-slate-800 text-white"
+                        : car.status === "Pending Inspection"
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-green-100 text-green-700"
+                    }`}
+                  >
                     {car.status ?? "Live"}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
+                  <button onClick={() => toggleSold(car)} className="mr-3 text-slate-600 hover:underline">
+                    {car.status === "Sold" ? "Mark Live" : "Mark Sold"}
+                  </button>
                   <button onClick={() => startEdit(car)} className="mr-3 text-blue-700 hover:underline">
                     Edit
                   </button>
