@@ -14,11 +14,10 @@ export default function HomePage() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
 
   useEffect(() => {
-    // localStorage isn't available during SSR, so we render the seed data
-    // first and swap in the full list (seed + locally added cars) after
-    // mount to avoid a hydration mismatch.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCars(getAllCars());
+    // Neither localStorage nor the /api/cars database is available during
+    // SSR, so we render the seed data first and swap in the full list
+    // after mount to avoid a hydration mismatch.
+    getAllCars().then(setCars);
   }, []);
 
   const brands = useMemo(

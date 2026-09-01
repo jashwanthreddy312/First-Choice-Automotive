@@ -17,12 +17,20 @@ there's no public "sell your car" intake flow.
   stay visible to visitors with a "Sold" badge rather than disappearing.
 - A locations page listing branch hubs with maps (`app/locations`)
 
-Listings are seeded in [`lib/data.ts`](lib/data.ts). Anything added or
-changed via the Admin panel is persisted to the browser's `localStorage`
-(see [`lib/store.ts`](lib/store.ts)) — it will not sync across devices or
-survive clearing browser data. Swap in Supabase (or another database) for
-real, shared persistence — see the deployment guide provided alongside this
-project for step-by-step instructions.
+Listings are seeded in [`lib/data.ts`](lib/data.ts). By default, anything
+added or changed via the Admin panel is persisted to the browser's
+`localStorage` (see [`lib/store.ts`](lib/store.ts)) — it will not sync
+across devices or survive clearing browser data.
+
+### Optional: a real, shared database (Azure Cosmos DB)
+
+The app is already wired to use [Azure Cosmos DB](https://azure.microsoft.com/products/cosmos-db)
+instead of `localStorage` the moment it's configured — nothing else to
+change. Copy [`.env.local.example`](.env.local.example) to `.env.local`
+and fill in `COSMOS_ENDPOINT` / `COSMOS_KEY` from your Cosmos DB account
+(also add them in your host's environment variable settings for the
+deployed site). The `cars` container is created and seeded automatically
+on first use. See the deployment guide for the full setup walkthrough.
 
 ## Getting started
 

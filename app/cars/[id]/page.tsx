@@ -63,10 +63,15 @@ export default function CarDetailPage() {
   const [car, setCar] = useState<Car | null | undefined>(undefined);
 
   useEffect(() => {
-    // localStorage isn't available during SSR, so we look the car up
-    // client-side after mount rather than on the server.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCar(getCarById(id) ?? null);
+    // Neither localStorage nor the /api/cars database is available during
+    // SSR, so we look the car up client-side after mount.
+    let cancelled = false;
+    getCarById(id).then((found) => {
+      if (!cancelled) setCar(found ?? null);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (car === undefined) {

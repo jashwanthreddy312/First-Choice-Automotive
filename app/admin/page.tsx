@@ -56,8 +56,7 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (authed) setCars(getAllCars());
+    if (authed) getAllCars().then(setCars);
   }, [authed]);
 
   function login(e: React.FormEvent) {
@@ -71,8 +70,8 @@ export default function AdminPage() {
     }
   }
 
-  function refresh() {
-    setCars(getAllCars());
+  async function refresh() {
+    setCars(await getAllCars());
   }
 
   function startEdit(car: Car) {
@@ -105,7 +104,7 @@ export default function AdminPage() {
     setSaveError("");
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const existingCar = editingId ? cars.find((c) => c.id === editingId) : undefined;
     const payload: Partial<Car> = {
@@ -137,46 +136,54 @@ export default function AdminPage() {
 
     try {
       if (editingId) {
-        updateCar(editingId, payload);
+        await updateCar(editingId, payload);
       } else {
-        addCar({ id: nextCustomId(), ...payload } as Car);
+        await addCar({ id: nextCustomId(), ...payload } as Car);
       }
       setSaveError("");
       cancelEdit();
-      refresh();
+      await refresh();
     } catch (err) {
       setSaveError(
-        err instanceof StorageFullError
+        err instanceof StorageFullError || err instanceof Error
           ? err.message
           : "Something went wrong saving this listing."
       );
     }
   }
 
-  function handleDelete(id: string) {
+  async function handleDelete(id: string) {
     if (!confirm("Delete this listing? This cannot be undone.")) return;
-    deleteCar(id);
-    refresh();
+    try {
+      await deleteCar(id);
+      await refresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Could not delete this listing.");
+    }
   }
 
-  function toggleSold(car: Car) {
-    if (car.status === "Sold") {
-      updateCar(car.id, { status: "Live", soldPrice: undefined, soldAt: undefined });
-      refresh();
-      return;
+  async function toggleSold(car: Car) {
+    try {
+      if (car.status === "Sold") {
+        await updateCar(car.id, { status: "Live", soldPrice: undefined, soldAt: undefined });
+        await refresh();
+        return;
+      }
+      const input = window.prompt(
+        `Sold price for ${car.year} ${car.brand} ${car.model} (₹)`,
+        String(car.price)
+      );
+      if (input === null) return; // cancelled
+      const soldPrice = Number(input);
+      await updateCar(car.id, {
+        status: "Sold",
+        soldPrice: Number.isFinite(soldPrice) && soldPrice > 0 ? soldPrice : car.price,
+        soldAt: new Date().toISOString(),
+      });
+      await refresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Could not update this listing.");
     }
-    const input = window.prompt(
-      `Sold price for ${car.year} ${car.brand} ${car.model} (₹)`,
-      String(car.price)
-    );
-    if (input === null) return; // cancelled
-    const soldPrice = Number(input);
-    updateCar(car.id, {
-      status: "Sold",
-      soldPrice: Number.isFinite(soldPrice) && soldPrice > 0 ? soldPrice : car.price,
-      soldAt: new Date().toISOString(),
-    });
-    refresh();
   }
 
   if (!authed) {
